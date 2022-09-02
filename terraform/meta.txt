@@ -1,0 +1,8 @@
+#cloud-config
+users:
+  - name: hwuser
+    groups: sudo
+    shell: /bin/bash
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3..........toxMuK0V hwuser@hw
