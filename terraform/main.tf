@@ -12,6 +12,7 @@ resource "yandex_compute_instance" "cp" {
   boot_disk {
     initialize_params {
       image_id = "fd83clk0nfo8p172omkn"
+      size = 20
     }
   }
 
@@ -37,6 +38,7 @@ resource "yandex_compute_instance" "node1" {
   boot_disk {
     initialize_params {
       image_id = "fd83clk0nfo8p172omkn"
+      size = 15
     }
   }
 
@@ -63,11 +65,13 @@ resource "yandex_compute_instance" "node2" {
   boot_disk {
     initialize_params {
       image_id = "fd83clk0nfo8p172omkn"
+      size = 15
     }
   }
 
   network_interface {
     subnet_id  = yandex_vpc_subnet.subnet-c.id
+    nat        = true
   }
 
   metadata = {
