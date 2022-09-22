@@ -1,0 +1,46 @@
+image: docker:latest
+services:
+  - docker:dind
+
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  KUBECONFIG: /etc/deploy/config
+
+build:
+  stage: build
+  before_script:
+    - docker login ${DOCKER_REGISTRY} -u "${DOCKER_USER}" -p "${DOCKER_PASSWORD}"
+  script:
+    - docker build -t ${CONTAINER_IMAGE} -t latest ./app
+    - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE}:${CI_COMMIT_SHORT_SHA}
+    - docker push ${CONTAINER_IMAGE}:${CI_COMMIT_SHORT_SHA}
+    - docker push ${CONTAINER_IMAGE}:latest
+
+test:
+  stage: test
+  needs: ["build"]
+  script:
+    - docker pull ${CONTAINER_IMAGE}:${CI_COMMIT_SHORT_SHA}
+    - docker run -d --name app-test -p80:80 ${CONTAINER_IMAGE}:${CI_COMMIT_SHORT_SHA}
+    - sleep 15
+    - docker exec app-test curl -s http://0.0.0.0:80/ | grep Vitaly && echo "Test succeeded"
+  only:
+    - main
+
+deploy:
+  stage: deploy
+  needs: ["test"]
+  image: dtzar/helm-kubectl
+  script:
+    - mkdir -p /etc/deploy
+    - echo ${KUBE_CONFIG} | base64 -d > ${KUBECONFIG}
+    - kubectl config use-context kubernetes-admin@cluster.local
+    - sed -i "s/__teg__/${CI_COMMIT_SHORT_SHA}/g" ./app/deploy.yaml
+    - kubectl apply -f ./app
+  only:
+    - main
+
