@@ -1,0 +1,37 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: dp-app
+  name: dp-app
+  namespace: stage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dp-app
+  template:
+    metadata:
+      labels:
+        app: dp-app
+    spec:
+      containers:
+        - image: registry.gitlab.com/vitalymozhaev/app/dp_app:v1.0.0
+          imagePullPolicy: IfNotPresent
+          name: dp-app
+      terminationGracePeriodSeconds: 30
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dp-app
+  namespace: stage
+spec:
+  ports:
+    - name: web
+      port: 80
+      targetPort: 80
+  selector:
+    app: dp-app
