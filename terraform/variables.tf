@@ -2,15 +2,15 @@
 
 variable "token" {
   type = string
-  default = ""
+  default = "AQA...zEU"
 }
 
 variable "cloud_id" {
   type = string
-  default = ""
+  default = "b1...nf"
 }
 
 variable "folder_id" {
   type = string
-  default = ""
+  default = "b1...k"
 }
