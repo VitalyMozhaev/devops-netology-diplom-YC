@@ -29,8 +29,7 @@
 - Файл конфигураций `~/.kube/config` перенесён на локальную машину для управления удалённым кластером.
 - Результат выполнения команды `kubectl get pods --all-namespaces`:
 ```bash
-sudo kubectl get nodes
-[sudo] пароль для kubeuser:
+kubectl get nodes
 NAME    STATUS   ROLES                  AGE   VERSION
 cp1     Ready    control-plane,master   13m   v1.23.4
 node1   Ready    <none>                 11m   v1.23.4
@@ -72,7 +71,30 @@ kube-system   nodelocaldns-hcvrj                        1/1     Running   0     
 ---
 ## 4. Подготовка cистемы мониторинга и деплой приложения
 
+Процесс реализации и исходники находятся в [репозитории](https://gitlab.com/VitalyMozhaev/monitoring).
+
+Результат выполнения:
+
+- [Git репозиторий с конфигурационными файлами для настройки Kubernetes](https://gitlab.com/VitalyMozhaev/monitoring).
+- [Http доступ к web интерфейсу grafana](http://178.154.223.46:30667/d/fAovOA74z/node-exporter-nodes-copy?orgId=1&refresh=30s). Стандартный логин / пароль — admin / prom-operator
+- [Http доступ к тестовому приложению](http://51.250.111.254/).
+
 
 ---
 ## 5. Установка и настройка CI/CD
+
+Процесс реализации и исходники находятся в [репозитории](https://gitlab.com/VitalyMozhaev/cicd).
+
+Результат выполнения:
+
+- [Интерфейс ci/cd сервиса доступен по http](https://gitlab.com/VitalyMozhaev/cicd/-/pipelines).
+- При любом коммите [в репозиторие](https://gitlab.com/VitalyMozhaev/app/container_registry/3434688) с тестовым приложением [происходит сборка и отправка](https://gitlab.com/VitalyMozhaev/cicd/-/pipelines) в регистр Docker образа.
+- При создании коммита в ветку main происходит [деплой соответствующего Docker образа в кластер Kubernetes](https://gitlab.com/VitalyMozhaev/cicd/-/blob/main/.gitlab-ci.yml).
+
+
+# PS
+
+Обучение в Netology позволяет погрузиться в современные технологии DevOps, посмотреть возможности инструментов, самому автоматизировать процессы CI/CD и реализовать подход `Инфраструктура как код`.
+
+Выражаю благодарность всем преподавателям, наставникам и организаторам Netology. Большое спасибо за проделанную работу, высокий уровень преподавателей, а также проработанные материалы хорошего качества (теория + практика).
 
